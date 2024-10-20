@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monitor - PhonoVerse</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Your existing CSS here */
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Existing HTML structure here -->
+
+        <div class="refresh-timer">
+            Next check in: <span id="countdown">30</span>s
+        </div>
+    </div>
+
+    <script>
+        const apiUrl = 'http://localhost:5000/status'; // Change this to your API endpoint
+
+        function fetchStatus() {
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    // Populate your UI with the fetched data
+                    document.querySelector('.status-indicator').className = data.current_status.status === 1 ? 'status-indicator status-up' : 'status-indicator status-down';
+                    document.querySelector('#responseTime').textContent = data.current_status.response_time + 'ms';
+                    document.querySelector('#uptime').textContent = data.uptime + '%';
+
+                    // Update charts with data.log_data (if needed)
+                })
+                .catch(error => console.error('Error fetching status:', error));
+        }
+
+        setInterval(fetchStatus, 30000);  // Fetch status every 30 seconds
+        fetchStatus();  // Initial fetch
+    </script>
+</body>
+</html>
